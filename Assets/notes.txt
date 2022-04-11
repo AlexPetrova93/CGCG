@@ -1,0 +1,4 @@
+CustomRenderPass:
+*When multiple postprocessing effects are added on the camera, they are executed in the order they are shown in the 
+inspector* (topmost effect being rendered first. Result of one effect is passed as “source image” to the next one; 
+and internally Unity creates one or more temporary render textures to keep these intermediate results in.)

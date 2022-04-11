@@ -1,4 +1,4 @@
-Shader "Hidden/NewImageEffectShader"
+Shader "Hidden/DepthAndNormalsShader"
 {
     Properties
     {
@@ -20,12 +20,12 @@ Shader "Hidden/NewImageEffectShader"
             struct appdata
             {
                 float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
+                float3 normal : NORMAL;
             };
 
             struct v2f
             {
-                float4 uv : TEXCOORD0;
+                half3 normal : TEXCOORD0;
                 float4 vertex : SV_POSITION;
             };
 
@@ -33,18 +33,17 @@ Shader "Hidden/NewImageEffectShader"
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = ComputeScreenPos(v.vertex);
+                o.normal = UnityObjectToWorldNormal(v.normal);
                 return o;
             }
 
             sampler2D _MainTex;
             sampler2D _CameraDepthTexture;
 
-            fixed4 frag (v2f i) : SV_Target
+            fixed4 frag(v2f i) : SV_Target
             {
-                float2 ScreenspaceUV = i.uv.xy / i.uv.w;
-                fixed4 col = tex2D(_CameraDepthTexture, ScreenspaceUV);
-
+                fixed4 col = 0; 
+                col.rgb = i.normal * .5 + .5;;
                 return col;
             }
             ENDCG
