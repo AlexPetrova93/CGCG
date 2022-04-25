@@ -1,4 +1,8 @@
-Shader "Unlit/NormalsShader"
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Unlit/DepthShader"
 {
     Properties
     {
@@ -20,13 +24,12 @@ Shader "Unlit/NormalsShader"
             struct appdata
             {
                 float4 vertex : POSITION;
-                float3 normal : NORMAL;
             };
 
             struct v2f
             {
                 float4 vertex : SV_POSITION;
-                half3 normal : TEXCOORD0;
+                float2 depth : TEXCOORD0;
             };
 
             sampler2D _MainTex;
@@ -36,15 +39,13 @@ Shader "Unlit/NormalsShader"
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.normal = UnityObjectToWorldNormal(v.normal);
+                UNITY_TRANSFER_DEPTH(o.depth);
                 return o;
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            half4 frag (v2f i) : SV_Target
             {
-                fixed4 col = 0;
-                col.rgb = i.normal * .5 + .5;;
-                return col;
+                UNITY_OUTPUT_DEPTH(i.depth);
             }
             ENDCG
         }

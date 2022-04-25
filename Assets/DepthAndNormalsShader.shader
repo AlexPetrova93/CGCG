@@ -7,7 +7,7 @@ Shader "Hidden/DepthAndNormalsShader"
     SubShader
     {
         // No culling or depth
-        //Cull Off ZWrite Off ZTest Always
+        Cull Off ZWrite Off ZTest Always
 
         Pass
         {
@@ -42,8 +42,11 @@ Shader "Hidden/DepthAndNormalsShader"
 
             fixed4 frag(v2f i) : SV_Target
             {
+                float4 depthNormals = tex2D(_CameraDepthTexture, i.vertex);
+
                 fixed4 col = 0; 
-                col.rgb = i.normal * .5 + .5;;
+                col.rgb = i.normal * .5 + .5;
+                col.rgb = depthNormals;
                 return col;
             }
             ENDCG
