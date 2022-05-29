@@ -253,7 +253,7 @@ Camera:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -267,8 +267,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: 5
+  far clip plane: 100
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -328,6 +328,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 3b9189db8a82e5e47bd8535123463a5d, type: 2}
+  depthMat: {fileID: 2100000, guid: 8af827d4242c6af448d03b3485aecdf2, type: 2}
+  normalsMat: {fileID: 2100000, guid: 6516119ea1d62ad4a892cf14baa197e9, type: 2}
+  edgesMat: {fileID: 2100000, guid: 8df03b8d2933e1f4ab87e19600badaae, type: 2}
 --- !u!1001 &1854318228
 PrefabInstance:
   m_ObjectHideFlags: 0

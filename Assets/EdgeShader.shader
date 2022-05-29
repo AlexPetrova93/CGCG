@@ -1,8 +1,10 @@
-Shader "Hidden/DepthAndNormalsShader"
+Shader "Hidden/NormalsShader"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        _DepthTex("Depth Texture", 2D) = "white" {}
+        _NormalsTex("Normals Texture", 2D) = "white" {}
     }
 
     SubShader
@@ -37,29 +39,23 @@ Shader "Hidden/DepthAndNormalsShader"
                 return o;
             }
 
-            sampler2D _MainTex;  // the screen (original img)
-            sampler2D _CameraDepthTexture;  // camera depth
-            sampler2D _CameraDepthNormalsTexture;  // camera depth + normals
+            sampler2D _MainTex;  
+            sampler2D _DepthTex;
+            sampler2D _NormalsTex;
 
             fixed4 frag(v2f i) : SV_Target
             {
-                float4 screen = tex2D(_MainTex, i.uv);
-                float4 depthOnly = tex2D(_CameraDepthTexture, i.uv);
-                float4 depthNormals = tex2D(_CameraDepthNormalsTexture, i.uv);
+                float4 depthOnly = tex2D(_DepthTex, i.uv);
+                float4 normalsOnly = tex2D(_NormalsTex, i.uv);
 
                 fixed4 col = 0;
                 //col.rgb = i.uv;
-                col.rgb = screen;
 
                 fixed4 depth = 0;
-                depth.rgb = depthOnly.rrr;
-
-                fixed4 normals = 0;
-                normals.rg = depthNormals.rg;
+                depth.rgb = depthOnly;
 
 
-
-                return col;
+                return depth;
             }
             ENDCG
         }

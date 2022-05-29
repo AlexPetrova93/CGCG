@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class CustomRenderPass : MonoBehaviour
 {
-    public Material material;
+    public Material depthMat;
+    public Material normalsMat;
+
+    public Material edgesMat;
 
     private void Start()
     {
@@ -13,7 +16,26 @@ public class CustomRenderPass : MonoBehaviour
 
     void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
-        Graphics.Blit(src, dest, material);
+        // get temp textures for depth, normals
+        RenderTexture depthTex = RenderTexture.GetTemporary(src.width, src.height);
+        RenderTexture normalsTex = RenderTexture.GetTemporary(src.width, src.height);
+
+        // get depth
+        Graphics.Blit(src, depthTex, depthMat);
+
+        // get normals
+        Graphics.Blit(src, normalsTex, normalsMat);
+
+        // pass depth and normals to edge shader
+        edgesMat.SetTexture("_DepthTex", depthTex);
+        edgesMat.SetTexture("_NormalsTex", normalsTex);
+        Graphics.Blit(src, dest, edgesMat);
+
+
+        // release temp textures
+        RenderTexture.ReleaseTemporary(depthTex);
+        RenderTexture.ReleaseTemporary(normalsTex);
+
     }
 
     //void OnRenderImage(RenderTexture src, RenderTexture dest)
