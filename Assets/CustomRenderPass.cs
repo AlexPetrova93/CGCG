@@ -8,7 +8,7 @@ public class CustomRenderPass : MonoBehaviour
 
     private void Start()
     {
-        GetComponent<Camera>().depthTextureMode = DepthTextureMode.Depth;
+        GetComponent<Camera>().depthTextureMode = DepthTextureMode.DepthNormals;
     }
 
     void OnRenderImage(RenderTexture src, RenderTexture dest)
