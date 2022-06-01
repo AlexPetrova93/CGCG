@@ -5,7 +5,7 @@ using UnityEngine;
 public class CustomRenderPass : MonoBehaviour
 {
     [Range(0, 1)] public float depthEdgeThreshold = 0.01f;
-    [Range(0, 1)] public float normalEdgeThreshold = 0.01f;
+    [Range(0, 10)] public float normalEdgeThreshold = 0.01f;
 
     public Material edgeDetectionMat;
 

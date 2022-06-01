@@ -147,7 +147,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
@@ -327,7 +327,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 1, g: 1, b: 0.77647066, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -400,7 +400,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ee7df84233664946bd64603c4c31ec6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  edgeThreshold: 0.01
+  depthEdgeThreshold: 0.16
+  normalEdgeThreshold: 3.52
   edgeDetectionMat: {fileID: 2100000, guid: 723332b758175df4ebede5e2bddb9ea1, type: 2}
   depthNormalsMat: {fileID: 2100000, guid: 190ae72f14d46e740bfc1ce6c20809dc, type: 2}
   depthMat: {fileID: 2100000, guid: 8af827d4242c6af448d03b3485aecdf2, type: 2}
@@ -544,7 +545,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 86f3ccbb30c94634a91345dc36fe9147, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8910783254434395671, guid: 86f3ccbb30c94634a91345dc36fe9147, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -617,7 +618,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5d7c9a731a5461143be300b3808398fe, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d7c9a731a5461143be300b3808398fe, type: 3}

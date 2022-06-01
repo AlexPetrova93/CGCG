@@ -2,7 +2,7 @@ Shader "Hidden/EdgeDetectionShader"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
+        _MainTex("Texture", 2D) = "white" {}
         _ThresholdDepth("Depth Edge Threshold", Float) = 0.01
         _ThresholdNormal("Normal Edge Threshold", Float) = 0.01
     }
@@ -120,8 +120,40 @@ Shader "Hidden/EdgeDetectionShader"
                 return In * Iz;
             }
 
+            float sobel(float2 uv, int component) 
+            {
+                float2 texelSize = float2(1 / _ScreenParams.x, 1 / _ScreenParams.y);
+
+                // one kernel is enough - vertical is just transposed
+                float3x3 kernel = {
+                    -1, 0, 1,
+                    -2, 0, 2,
+                    -1, 0, 1
+                };
+
+                float2 samples = 0;
+                for (int j = 0; j < 3; j++)
+                {
+                    for (int k = 0; k < 3; k++)
+                    {
+                        float2 idx = uv + texelSize * float2(j - 1, k - 1);
+                        samples.x += kernel[j][k] * getDepthNormal(idx)[component]; // horizontal detection
+                        samples.y += kernel[k][j] * getDepthNormal(idx)[component]; // vertical detection
+                    }
+                }
+
+                // return magnitude
+                return sqrt(samples.x * samples.x + samples.y * samples.y);
+            }
+
+            float getEdge(float magnitude, float threshold) 
+            {
+                return magnitude > threshold ? 0 : 1;
+            }
+
             fixed4 frag(v2f i) : SV_Target
             {
+                float4 col = tex2D(_MainTex, i.uv);
 
                 float4 depthNormals = tex2D(_CameraDepthNormalsTexture, i.uv);
                 fixed4 debug = 0;
@@ -138,11 +170,11 @@ Shader "Hidden/EdgeDetectionShader"
                     -1, 0, 1
                 };
 
-                float3x3 SobelY = {
+                /*float3x3 SobelY = {
                     -1, -2, -1,
                      0,  0,  0,
                      1,  2,  1
-                };
+                };*/
 
                 float2 offsets[9] = {
                     float2(-1, 1),
@@ -165,15 +197,23 @@ Shader "Hidden/EdgeDetectionShader"
                     for (int k = 0; k < 3; k++)
                     {
                         float2 idx = i.uv + texelSize * float2(j - 1, k - 1);
-                        samplex += SobelX[j][k] * getDepthNormal(idx).a;
-                        sampley += SobelY[j][k] * getDepthNormal(idx).a;
+                        samplex += SobelX[j][k] * getDepthNormal(idx)[3];
+                        sampley += SobelX[k][j] * getDepthNormal(idx)[3];
                     }
                 }
-                float mag = sqrt(samplex * samplex + sampley * sampley);
+                //float mag = sqrt(samplex * samplex + sampley * sampley);
+                float mag = sobel(i.uv, 3); // get depth detection
 
-                edges.rgb = mag > _ThresholdDepth ? 0 : 1;
+                edges.rgb = getEdge(mag, _ThresholdDepth);
 
-                return edges;
+                mag = sobel(i.uv, 0);
+                edges.rgb *= getEdge(mag, _ThresholdNormal);
+                mag = sobel(i.uv, 1);
+                edges.rgb *= getEdge(mag, _ThresholdNormal);
+                mag = sobel(i.uv, 2);
+                edges.rgb *= getEdge(mag, _ThresholdNormal);
+
+                return edges * col;
             }
 
             ENDCG
