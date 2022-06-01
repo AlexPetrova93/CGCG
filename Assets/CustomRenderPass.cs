@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class CustomRenderPass : MonoBehaviour
 {
+    [Range(0, 1)] public float depthEdgeThreshold = 0.01f;
+    [Range(0, 1)] public float normalEdgeThreshold = 0.01f;
+
+    public Material edgeDetectionMat;
+
+    public Material depthNormalsMat;
+
     public Material depthMat;
     public Material normalsMat;
 
@@ -15,6 +22,32 @@ public class CustomRenderPass : MonoBehaviour
     }
 
     void OnRenderImage(RenderTexture src, RenderTexture dest)
+    {
+        // get depth and normals
+        edgeDetectionMat.SetFloat("_ThresholdDepth", depthEdgeThreshold);
+        edgeDetectionMat.SetFloat("_ThresholdNormal", normalEdgeThreshold);
+        Graphics.Blit(src, dest, edgeDetectionMat);
+
+    }
+
+    /*void OnRenderImage(RenderTexture src, RenderTexture dest)
+    {
+        // get temp texture for depth and normals
+        RenderTexture depthNormalsTex = RenderTexture.GetTemporary(src.width, src.height);
+
+        // get depth and normals
+        Graphics.Blit(src, depthNormalsTex, depthNormalsMat);
+
+        // pass depth and normals to edge shader
+        Graphics.Blit(depthNormalsTex, dest, edgesMat);
+
+
+        // release temp textures
+        RenderTexture.ReleaseTemporary(depthNormalsTex);
+
+    }*/
+
+    /*void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
         // get temp textures for depth, normals
         RenderTexture depthTex = RenderTexture.GetTemporary(src.width, src.height);
@@ -36,7 +69,7 @@ public class CustomRenderPass : MonoBehaviour
         RenderTexture.ReleaseTemporary(depthTex);
         RenderTexture.ReleaseTemporary(normalsTex);
 
-    }
+    }*/
 
     //void OnRenderImage(RenderTexture src, RenderTexture dest)
     //{

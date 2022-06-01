@@ -43,7 +43,7 @@ Shader "Hidden/DepthAndNormalsShader"
 
             fixed4 frag(v2f i) : SV_Target
             {
-                float4 screen = tex2D(_MainTex, i.uv);
+                /*float4 screen = tex2D(_MainTex, i.uv);
                 float4 depthOnly = tex2D(_CameraDepthTexture, i.uv);
                 float4 depthNormals = tex2D(_CameraDepthNormalsTexture, i.uv);
 
@@ -55,11 +55,13 @@ Shader "Hidden/DepthAndNormalsShader"
                 depth.rgb = depthOnly.rrr;
 
                 fixed4 normals = 0;
-                normals.rg = depthNormals.rg;
+                normals.rg = depthNormals.rg;*/
 
+                half3 normal;
+                float depth;
+                DecodeDepthNormal(tex2D(_CameraDepthNormalsTexture, i.uv), depth, normal);
 
-
-                return col;
+                return fixed4(normal, depth);
             }
             ENDCG
         }
