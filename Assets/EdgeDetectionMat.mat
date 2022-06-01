@@ -26,6 +26,6 @@ Material:
     m_Floats:
     - _Threshold: 0.015
     - _ThresholdDepth: 0.16
-    - _ThresholdNormal: 2.11
+    - _ThresholdNormal: 3.52
     m_Colors: []
   m_BuildTextureStacks: []

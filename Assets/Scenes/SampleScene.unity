@@ -402,7 +402,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   depthEdgeThreshold: 0.16
   normalEdgeThreshold: 3.52
+  uncertaintyAB: {x: 2, y: 0}
+  uncertaintyCD: {x: 0, y: 2}
   edgeDetectionMat: {fileID: 2100000, guid: 723332b758175df4ebede5e2bddb9ea1, type: 2}
+  sketchyMat: {fileID: 2100000, guid: 4d802cb3f50667045bd039e19b48c820, type: 2}
   depthNormalsMat: {fileID: 2100000, guid: 190ae72f14d46e740bfc1ce6c20809dc, type: 2}
   depthMat: {fileID: 2100000, guid: 8af827d4242c6af448d03b3485aecdf2, type: 2}
   normalsMat: {fileID: 2100000, guid: 6516119ea1d62ad4a892cf14baa197e9, type: 2}

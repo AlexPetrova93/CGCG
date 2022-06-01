@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class CustomRenderPass : MonoBehaviour
 {
+    [Header("Edge detection")]
     [Range(0, 1)] public float depthEdgeThreshold = 0.01f;
     [Range(0, 10)] public float normalEdgeThreshold = 0.01f;
 
+    [Header("Noise")]
+    public Vector2 uncertaintyAB = Vector2.one;
+    public Vector2 uncertaintyCD = Vector2.one;
+
+    [Header("Materials")]
     public Material edgeDetectionMat;
+    public Material sketchyMat;
 
     public Material depthNormalsMat;
 
@@ -19,16 +26,51 @@ public class CustomRenderPass : MonoBehaviour
     private void Start()
     {
         GetComponent<Camera>().depthTextureMode = DepthTextureMode.DepthNormals;
+        Texture2D noise = GeneratePerlinNoise(Screen.width, Screen.height);
+        sketchyMat.SetTexture("_NoiseMap", noise);
     }
 
     void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
-        // get depth and normals
+        // get temp texture for the edge map
+        RenderTexture edgeMap = RenderTexture.GetTemporary(src.width, src.height);
+
+        // get edge map
         edgeDetectionMat.SetFloat("_ThresholdDepth", depthEdgeThreshold);
         edgeDetectionMat.SetFloat("_ThresholdNormal", normalEdgeThreshold);
-        Graphics.Blit(src, dest, edgeDetectionMat);
+        Graphics.Blit(src, edgeMap, edgeDetectionMat);
 
+        // apply sketchy effect and render to screen
+        sketchyMat.SetTexture("_EdgeMap", edgeMap);
+        sketchyMat.SetVector("_UncertaintyMatrix", new Vector4(uncertaintyAB.x, uncertaintyAB.y, uncertaintyCD.x, uncertaintyCD.y));
+        Graphics.Blit(src, dest, sketchyMat);
+
+        // release temp textures
+        RenderTexture.ReleaseTemporary(edgeMap);
     }
+
+    private Texture2D GeneratePerlinNoise(int width, int height)
+    {
+        Texture2D tex = new Texture2D(width, height, TextureFormat.RFloat, false);
+
+        float xScale = (1f / width) * 100;
+        float yScale = (1f / width) * 100;
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                float noise = Mathf.PerlinNoise(x * xScale, y * yScale);
+
+                tex.SetPixel(x, y, new Color(noise, 0, 0));
+            }
+        }
+
+        tex.Apply();
+
+        return tex;
+    }
+
 
     /*void OnRenderImage(RenderTexture src, RenderTexture dest)
     {

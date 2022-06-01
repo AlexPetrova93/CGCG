@@ -213,7 +213,7 @@ Shader "Hidden/EdgeDetectionShader"
                 mag = sobel(i.uv, 2);
                 edges.rgb *= getEdge(mag, _ThresholdNormal);
 
-                return edges * col;
+                return edges;
             }
 
             ENDCG
