@@ -16,16 +16,29 @@ public class FlyCam : MonoBehaviour
     private float mouseX;
     private float mouseY;
 
+    public bool canMove = true;
+
+    private Vector3 originalPosition;
+    private Quaternion originalRotation;
+
+    private void Start()
+    {
+        originalPosition = transform.position;
+        originalRotation = transform.rotation;
+    }
+
     void Update()
     {
+        if (!canMove) return;
+
         // input
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(1))
         {
             mouseDown = true;
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = false;
         }
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(1))
         {
             mouseDown = false;
             Cursor.lockState = CursorLockMode.None;
@@ -44,7 +57,9 @@ public class FlyCam : MonoBehaviour
     }
 
     private void LateUpdate()
-    {       
+    {
+        if (!canMove) return;
+
         // camera
         if (mouseDown)
         {
@@ -60,5 +75,10 @@ public class FlyCam : MonoBehaviour
 
     }
 
+    public void ResetCamera()
+    {
+        transform.position = originalPosition;
+        transform.rotation = originalRotation;
+    }
 
 }

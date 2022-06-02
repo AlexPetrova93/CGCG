@@ -207,11 +207,11 @@ Shader "Hidden/EdgeDetectionShader"
                 edges.rgb = getEdge(mag, _ThresholdDepth);
 
                 mag = sobel(i.uv, 0);
-                edges.rgb *= getEdge(mag, _ThresholdNormal);
+                //edges.rgb *= getEdge(mag, _ThresholdNormal);
                 mag = sobel(i.uv, 1);
-                edges.rgb *= getEdge(mag, _ThresholdNormal);
+                //edges.rgb *= getEdge(mag, _ThresholdNormal);
                 mag = sobel(i.uv, 2);
-                edges.rgb *= getEdge(mag, _ThresholdNormal);
+                //edges.rgb *= getEdge(mag, _ThresholdNormal);
 
                 return edges;
             }

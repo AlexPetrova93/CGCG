@@ -9,24 +9,24 @@ public class CustomRenderPass : MonoBehaviour
     [Range(0, 10)] public float normalEdgeThreshold = 0.01f;
 
     [Header("Noise")]
-    public Vector2 uncertaintyAB = Vector2.one;
-    public Vector2 uncertaintyCD = Vector2.one;
+    public Vector2 noiseScale = new Vector2(100, 100);
+    public Vector4 uncertaintyMatrix = Vector4.one;
 
     [Header("Materials")]
     public Material edgeDetectionMat;
     public Material sketchyMat;
 
-    public Material depthNormalsMat;
+    //public Material depthNormalsMat;
 
-    public Material depthMat;
-    public Material normalsMat;
+    //public Material depthMat;
+    //public Material normalsMat;
 
-    public Material edgesMat;
+    //public Material edgesMat;
 
     private void Start()
     {
         GetComponent<Camera>().depthTextureMode = DepthTextureMode.DepthNormals;
-        Texture2D noise = GeneratePerlinNoise(Screen.width, Screen.height);
+        Texture2D noise = GeneratePerlinNoise();
         sketchyMat.SetTexture("_NoiseMap", noise);
     }
 
@@ -42,19 +42,21 @@ public class CustomRenderPass : MonoBehaviour
 
         // apply sketchy effect and render to screen
         sketchyMat.SetTexture("_EdgeMap", edgeMap);
-        sketchyMat.SetVector("_UncertaintyMatrix", new Vector4(uncertaintyAB.x, uncertaintyAB.y, uncertaintyCD.x, uncertaintyCD.y));
+        sketchyMat.SetVector("_UncertaintyMatrix", uncertaintyMatrix);
         Graphics.Blit(src, dest, sketchyMat);
 
         // release temp textures
         RenderTexture.ReleaseTemporary(edgeMap);
     }
 
+    public Texture2D GeneratePerlinNoise() => GeneratePerlinNoise(Screen.width, Screen.height);
+
     private Texture2D GeneratePerlinNoise(int width, int height)
     {
         Texture2D tex = new Texture2D(width, height, TextureFormat.RFloat, false);
 
-        float xScale = (1f / width) * 100;
-        float yScale = (1f / width) * 100;
+        float xScale = (1f / width) * noiseScale.x;
+        float yScale = (1f / width) * noiseScale.y;
 
         for (int x = 0; x < width; x++)
         {
