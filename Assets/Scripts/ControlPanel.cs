@@ -6,10 +6,12 @@ public class ControlPanel : MonoBehaviour
     [SerializeField] private CustomRenderPass customRenderPass;
 
     // edge detection
+    public bool edgesOn = true;
     public ShaderProperty depthEdgeThreshold;
     public ShaderProperty normalEdgeThreshold;
 
     // noise
+    public bool uncertaintyOn = true;
     public ShaderProperty noiseScale;
     public ShaderProperty uncertaintyMatrix;
 
@@ -34,6 +36,9 @@ public class ControlPanel : MonoBehaviour
     {
         customRenderPass.GeneratePerlinNoise();
     }
+
+    public void SwitchEdgesOn() => edgesOn = !edgesOn;
+    public void SwitchUncertaintyOn() => uncertaintyOn = !uncertaintyOn;
 
 
 }

@@ -6,6 +6,8 @@ Shader "Hidden/SketchyShader"
         _EdgeMap("Edge Map", 2D) = "white" {}
         _NoiseMap("Noise Map", 2D) = "white" {}
         _UncertaintyMatrix("Uncertainty Matrix - a, b, c, d", Vector) = (1, 1, 1, 1)
+        _EdgesOn("Display outlines", Int) = 1
+        _UncertaintyOn("Apply sketchy effect", Int) = 1
     }
 
     SubShader
@@ -44,7 +46,9 @@ Shader "Hidden/SketchyShader"
             sampler2D _EdgeMap;  // precomputed edge map
             sampler2D _NoiseMap; // Perlin noise generated from code
             float4 _UncertaintyMatrix; // user defined uncertainty
-              
+            int _EdgesOn;
+            int _UncertaintyOn;
+                          
             float sampleEdgeMap(float2 uv) 
             {
                 return tex2D(_EdgeMap, uv).r;
@@ -71,14 +75,17 @@ Shader "Hidden/SketchyShader"
                         _UncertaintyMatrix.b * offu + _UncertaintyMatrix.a * offv
                         );
 
-                float4 col = tex2D(_MainTex, newUV);
+                float2 finalUV = _UncertaintyOn == 1 ? newUV : i.uv;
 
-                float edges = tex2D(_EdgeMap, newUV).r;
+                float4 col = tex2D(_MainTex, finalUV);
+                float edges = tex2D(_EdgeMap, finalUV).r;
 
-                fixed4 debug = 0;
-                debug.rgb = edges;
+                fixed4 final = _EdgesOn == 1 ? col * edges : col;
 
-                return col * edges;
+                fixed4 debug = 1;
+                debug.rgb = sampleEdgeMap(i.uv);
+
+                return final;
             }
 
             ENDCG

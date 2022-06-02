@@ -5,6 +5,7 @@ Shader "Hidden/EdgeDetectionShader"
         _MainTex("Texture", 2D) = "white" {}
         _ThresholdDepth("Depth Edge Threshold", Float) = 0.01
         _ThresholdNormal("Normal Edge Threshold", Float) = 0.01
+        _NormalModifier("Crease edge multiplier depending on camera distance", Float) = 1
     }
 
     SubShader
@@ -45,6 +46,7 @@ Shader "Hidden/EdgeDetectionShader"
 
             float _ThresholdDepth;
             float _ThresholdNormal;
+            float _NormalModifier;
 
             float3 expand3(float3 color) 
             {
@@ -160,58 +162,20 @@ Shader "Hidden/EdgeDetectionShader"
                 debug.rgb = depthNormals.rgb;
 
                 fixed4 edges = 0;
-                //edges.rgb = edgeDetection(i.uv);
 
-                float2 texelSize = float2(1 / _ScreenParams.x, 1 / _ScreenParams.y);
+                float camDist = getDepthNormal(i.uv).a;
 
-                float3x3 SobelX = {
-                    -1, 0, 1,
-                    -2, 0, 2,
-                    -1, 0, 1
-                };
-
-                /*float3x3 SobelY = {
-                    -1, -2, -1,
-                     0,  0,  0,
-                     1,  2,  1
-                };*/
-
-                float2 offsets[9] = {
-                    float2(-1, 1),
-                    float2(0, 1),
-                    float2(1, 1),
-
-                    float2(-1, 0),
-                    float2(0, 0),
-                    float2(1, 0),
-
-                    float2(-1, -1),
-                    float2(0, -1),
-                    float2(1, -1),
-                };
-
-                float samplex = 0;
-                float sampley = 0;
-                for (int j = 0; j < 3; j++)
-                {
-                    for (int k = 0; k < 3; k++)
-                    {
-                        float2 idx = i.uv + texelSize * float2(j - 1, k - 1);
-                        samplex += SobelX[j][k] * getDepthNormal(idx)[3];
-                        sampley += SobelX[k][j] * getDepthNormal(idx)[3];
-                    }
-                }
-                //float mag = sqrt(samplex * samplex + sampley * sampley);
-                float mag = sobel(i.uv, 3); // get depth detection
-
+                // depth
+                float mag = sobel(i.uv, 3); 
                 edges.rgb = getEdge(mag, _ThresholdDepth);
 
+                // normals
                 mag = sobel(i.uv, 0);
-                edges.rgb *= getEdge(mag, _ThresholdNormal);
+                edges.rgb *= getEdge(mag, _ThresholdNormal * camDist);
                 mag = sobel(i.uv, 1);
-                edges.rgb *= getEdge(mag, _ThresholdNormal);
+                edges.rgb *= getEdge(mag, _ThresholdNormal * camDist);
                 mag = sobel(i.uv, 2);
-                edges.rgb *= getEdge(mag, _ThresholdNormal);
+                edges.rgb *= getEdge(mag, _ThresholdNormal * camDist);
 
                 return edges;
             }

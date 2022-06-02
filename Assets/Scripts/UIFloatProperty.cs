@@ -17,17 +17,20 @@ public class UIFloatProperty : MonoBehaviour
 
     public void Init(float min, float max)
     {
-        value.Init(defaultValue, min, max);
+        value = new ShaderFloatValue(defaultValue, min, max);
         onValueChanged.AddListener(value.ChangeValue);
 
         if (slider)
         {
             slider.minValue = value.min;
+        Debug.Log("initiating " + name + " current value to " + defaultValue);
+        Debug.Log("initialized value is " + value.current);
             slider.maxValue = value.max;
             slider.value = value.current;
         }
 
         inputField.text = value.current.ToString(numberFormat);
+
 
         ChangeValueTextField();
     }

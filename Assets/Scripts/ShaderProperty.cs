@@ -3,19 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public struct ShaderFloatValue
+public class ShaderFloatValue
 {
-    [HideInInspector] public float current;
-    [HideInInspector] public float min;
-    [HideInInspector] public float max;
-    [HideInInspector] public UIFloatProperty uiProperty;
+    public float current;
+    public float min;
+    public float max;
 
-    public void Init(float current, float min, float max)
+    public ShaderFloatValue(float current, float min, float max)
     {
         this.current = current;
         this.min = min;
         this.max = max;
+        Debug.Log("this.current is " + this.current);
     }
 
     public void ChangeValue(float value)

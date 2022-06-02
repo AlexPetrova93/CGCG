@@ -8,11 +8,13 @@ public class CustomRenderPass : MonoBehaviour
 
     //[Header("Edge detection")]
     //[Range(0, 1)] public float depthEdgeThreshold = 0.01f;
-    [Range(0, 10)] public float normalEdgeThreshold = 0.01f;
+    //[Range(0, 10)] public float normalEdgeThreshold = 0.01f;
 
     //[Header("Noise")]
     //public Vector2 noiseScale = new Vector2(100, 100);
     //public Vector4 uncertaintyMatrix = Vector4.one;
+
+    public float normalEdgesModifier = 1;
 
     [Header("Materials")]
     public Material edgeDetectionMat;
@@ -27,7 +29,7 @@ public class CustomRenderPass : MonoBehaviour
 
     private void Start()
     {
-        GetComponent<Camera>().depthTextureMode = DepthTextureMode.DepthNormals;
+        GetComponent<Camera>().depthTextureMode = DepthTextureMode.Depth | DepthTextureMode.DepthNormals;
         GeneratePerlinNoise();
     }
 
@@ -39,11 +41,14 @@ public class CustomRenderPass : MonoBehaviour
         // get edge map
         edgeDetectionMat.SetFloat("_ThresholdDepth", shaderProperties.depthEdgeThreshold.ToFloat());
         edgeDetectionMat.SetFloat("_ThresholdNormal", shaderProperties.normalEdgeThreshold.ToFloat());
+        sketchyMat.SetFloat("_NormalModifier", normalEdgesModifier);
         Graphics.Blit(src, edgeMap, edgeDetectionMat);
 
         // apply sketchy effect and render to screen
         sketchyMat.SetTexture("_EdgeMap", edgeMap);
         sketchyMat.SetVector("_UncertaintyMatrix", shaderProperties.uncertaintyMatrix.ToVector4());
+        sketchyMat.SetInt("_EdgesOn", shaderProperties.edgesOn ? 1 : 0);
+        sketchyMat.SetInt("_UncertaintyOn", shaderProperties.uncertaintyOn ? 1 : 0);
         Graphics.Blit(src, dest, sketchyMat);
 
         // release temp textures
