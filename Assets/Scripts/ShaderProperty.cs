@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ShaderFloatValue
 {
@@ -30,13 +31,25 @@ public class ShaderProperty : MonoBehaviour
     public float min = 0;
     public float max = 100;
 
+    [HideInInspector] public UnityEvent onValueChanged;
+
     public void Start()
     {
         components = GetComponentsInChildren<UIFloatProperty>();
         foreach (var component in components)
         {
             component.Init(min, max);
+            onValueChanged.AddListener(component.SetUI);
         }
+    }
+
+    public void SetCurrent(float[] value)
+    {
+        for (int i = 0; i < components.Length; i++)
+        {
+            components[i].value.current = value[i];
+        }
+        onValueChanged.Invoke();
     }
 
     public float[] GetValue()

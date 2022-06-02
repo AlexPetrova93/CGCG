@@ -12,12 +12,18 @@ public class SceneProperties
     public EScene currentScene;
     public Color backgroundColor;
     public GameObject model;
+
+    public float defaultDepthEdgeThreshold;
+    public float defaultNormalEdgeThreshold;
+    public Vector2 defaultNoiseScale;
+    public Vector4 defaultUncertaintyMatrix;
 }
 
 public class InputController : MonoBehaviour
 {
     public SceneProperties[] scenes;
 
+    [SerializeField] private ControlPanel controlPanel;
     [SerializeField] private GameObject exitScreen;
 
     private int currentScene;
@@ -32,13 +38,12 @@ public class InputController : MonoBehaviour
         cam = Camera.main;
         flyCam = cam.GetComponent<FlyCam>();
 
-        currentScene = 0;
+        currentScene = -1;
         foreach (var scene in scenes)
         {
             scene.model.SetActive(false);
         }
-        scenes[0].model.SetActive(true);
-        cam.backgroundColor = scenes[0].backgroundColor;
+        SwitchScene();
 
         exitScreen.SetActive(false);
     }
@@ -56,7 +61,7 @@ public class InputController : MonoBehaviour
     public void SwitchScene()
     {
         // hide previous model
-        scenes[currentScene].model.SetActive(false);
+        if (currentScene >= 0) scenes[currentScene].model.SetActive(false);
 
         // increment scene
         ++currentScene;
@@ -66,6 +71,12 @@ public class InputController : MonoBehaviour
         scenes[currentScene].model.SetActive(true);
         // change camera background
         cam.backgroundColor = scenes[currentScene].backgroundColor;
+
+        // set default properties
+        controlPanel.depthEdgeThreshold.SetCurrent(scenes[currentScene].defaultDepthEdgeThreshold.ToFloatArray());
+        controlPanel.normalEdgeThreshold.SetCurrent(scenes[currentScene].defaultNormalEdgeThreshold.ToFloatArray());
+        controlPanel.noiseScale.SetCurrent(scenes[currentScene].defaultNoiseScale.ToFloatArray());
+        controlPanel.uncertaintyMatrix.SetCurrent(scenes[currentScene].defaultUncertaintyMatrix.ToFloatArray());
     }
 
     public void HideExitScreen()

@@ -727,7 +727,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 1
-  far clip plane: 50
+  far clip plane: 100
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -1280,12 +1280,25 @@ MonoBehaviour:
   - currentScene: 0
     backgroundColor: {r: 1, g: 1, b: 0.77647066, a: 0}
     model: {fileID: 958270639}
+    defaultDepthEdgeThreshold: 3
+    defaultNormalEdgeThreshold: 60
+    defaultNoiseScale: {x: 500, y: 500}
+    defaultUncertaintyMatrix: {x: 4, y: 0, z: 0, w: 4}
   - currentScene: 1
     backgroundColor: {r: 0.53555536, g: 0.63454074, b: 0.7830189, a: 0}
     model: {fileID: 2112883935}
+    defaultDepthEdgeThreshold: 1
+    defaultNormalEdgeThreshold: 15
+    defaultNoiseScale: {x: 450, y: 200}
+    defaultUncertaintyMatrix: {x: 0, y: 2, z: 2, w: 0}
   - currentScene: 2
     backgroundColor: {r: 0.70096123, g: 0.75265217, b: 0.8301887, a: 0}
     model: {fileID: 1970329289}
+    defaultDepthEdgeThreshold: 5
+    defaultNormalEdgeThreshold: 20
+    defaultNoiseScale: {x: 450, y: 450}
+    defaultUncertaintyMatrix: {x: 4, y: 0, z: 0, w: 4}
+  controlPanel: {fileID: 1436454298}
   exitScreen: {fileID: 198061023}
 --- !u!4 &1584028056
 Transform:
@@ -2599,15 +2612,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 719556550, guid: 8d58fc11c5c77a54185809e085433442, type: 3}
       propertyPath: max
-      value: 50
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 719556550, guid: 8d58fc11c5c77a54185809e085433442, type: 3}
       propertyPath: min
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1222582068439931735, guid: 8d58fc11c5c77a54185809e085433442, type: 3}
       propertyPath: defaultValue
-      value: 2.5
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 5839479437368048408, guid: 8d58fc11c5c77a54185809e085433442, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2987,15 +3000,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 719556550, guid: 8d58fc11c5c77a54185809e085433442, type: 3}
       propertyPath: max
-      value: 0.2
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 719556550, guid: 8d58fc11c5c77a54185809e085433442, type: 3}
       propertyPath: min
-      value: 0.01
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1222582068439931735, guid: 8d58fc11c5c77a54185809e085433442, type: 3}
       propertyPath: defaultValue
-      value: 0.1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1222582068439931735, guid: 8d58fc11c5c77a54185809e085433442, type: 3}
       propertyPath: value.current

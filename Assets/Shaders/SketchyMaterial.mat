@@ -43,5 +43,5 @@ Material:
     - _EdgesOn: 1
     - _UncertaintyOn: 1
     m_Colors:
-    - _UncertaintyMatrix: {r: 2, g: 0, b: 0, a: 2}
+    - _UncertaintyMatrix: {r: 4, g: 0, b: 0, a: 4}
   m_BuildTextureStacks: []

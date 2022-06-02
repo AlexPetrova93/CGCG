@@ -155,23 +155,17 @@ Shader "Hidden/EdgeDetectionShader"
 
             fixed4 frag(v2f i) : SV_Target
             {
-                float4 col = tex2D(_MainTex, i.uv);
-
-                float4 depthNormals = tex2D(_CameraDepthNormalsTexture, i.uv);
-                fixed4 debug = 0;
-                debug.rgb = depthNormals.rgb;
-
                 fixed4 edges = 0;
 
                 float camDist = getDepthNormal(i.uv).a;
 
                 // depth
                 float mag = sobel(i.uv, 3); 
-                edges.rgb = getEdge(mag, _ThresholdDepth);
+                edges.rgb = getEdge(mag, _ThresholdDepth * camDist);
 
                 // normals
                 mag = sobel(i.uv, 0);
-                edges.rgb *= getEdge(mag, _ThresholdNormal * camDist);
+                edges.rgb *= getEdge(mag, _ThresholdNormal * camDist); // multiply by camera distance to reduce effect when far away
                 mag = sobel(i.uv, 1);
                 edges.rgb *= getEdge(mag, _ThresholdNormal * camDist);
                 mag = sobel(i.uv, 2);

@@ -23,16 +23,22 @@ public class UIFloatProperty : MonoBehaviour
         if (slider)
         {
             slider.minValue = value.min;
-        Debug.Log("initiating " + name + " current value to " + defaultValue);
-        Debug.Log("initialized value is " + value.current);
             slider.maxValue = value.max;
             slider.value = value.current;
         }
 
         inputField.text = value.current.ToString(numberFormat);
 
+        SetUI();
+    }
 
-        ChangeValueTextField();
+    public void SetUI()
+    {
+        if (slider)
+        {
+            slider.value = value.current;
+        }
+        inputField.text = value.current.ToString(numberFormat);
     }
 
     public void ChangeValueSlider()

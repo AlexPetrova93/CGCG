@@ -65,4 +65,19 @@ public static class ShaderPropertiesExtensions
         if (value.Length < 4) return Vector4.zero;
         else return new Vector4(value[0], value[1], value[2], value[3]);
     }
+
+    public static float[] ToFloatArray(this float value)
+    {
+        return new float[] { value };
+    }
+
+    public static float[] ToFloatArray(this Vector2 value)
+    {
+        return new float[] { value.x, value.y };
+    }
+
+    public static float[] ToFloatArray(this Vector4 value)
+    {
+        return new float[] { value.x, value.y, value.z, value.w };
+    }
 }
