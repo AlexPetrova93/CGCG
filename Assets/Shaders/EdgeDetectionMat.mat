@@ -25,7 +25,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Threshold: 0.015
-    - _ThresholdDepth: 0.16
-    - _ThresholdNormal: 3.52
+    - _ThresholdDepth: 0.01
+    - _ThresholdNormal: 2.5
     m_Colors: []
   m_BuildTextureStacks: []
