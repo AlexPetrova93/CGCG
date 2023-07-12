@@ -4,28 +4,28 @@ using UnityEngine;
 
 public class CustomRenderPass : MonoBehaviour
 {
-    [SerializeField] private ControlPanel shaderProperties;
+    //[SerializeField] private ControlPanel shaderProperties;
 
-    //[Header("Edge detection")]
-    //[Range(0, 1)] public float depthEdgeThreshold = 0.01f;
-    //[Range(0, 10)] public float normalEdgeThreshold = 0.01f;
+    [Header("Edge detection")]
+    public float depthEdgeThreshold = 0.01f;
+    public float normalEdgeThreshold = 0.01f;
 
-    //[Header("Noise")]
-    //public Vector2 noiseScale = new Vector2(100, 100);
-    //public Vector4 uncertaintyMatrix = Vector4.one;
+    [Header("Noise")]
+    public Vector2 noiseScale = new Vector2(100, 100);
+    public Vector4 uncertaintyMatrix = new Vector4(10, 0, 0, 10);
+    public Texture2D NoiseMap;
+    public float NoiseScale = 1;
+    public float NoiseIntensity = 1;
 
     public float normalEdgesModifier = 1;
+
+    public bool EdgesOn;
+    public bool NoiseOn;
 
     [Header("Materials")]
     public Material edgeDetectionMat;
     public Material sketchyMat;
 
-    //public Material depthNormalsMat;
-
-    //public Material depthMat;
-    //public Material normalsMat;
-
-    //public Material edgesMat;
 
     private void Start()
     {
@@ -39,30 +39,33 @@ public class CustomRenderPass : MonoBehaviour
         RenderTexture edgeMap = RenderTexture.GetTemporary(src.width, src.height);
 
         // get edge map
-        edgeDetectionMat.SetFloat("_ThresholdDepth", shaderProperties.depthEdgeThreshold.ToFloat());
-        edgeDetectionMat.SetFloat("_ThresholdNormal", shaderProperties.normalEdgeThreshold.ToFloat());
+        edgeDetectionMat.SetFloat("_ThresholdDepth", depthEdgeThreshold);
+        edgeDetectionMat.SetFloat("_ThresholdNormal", normalEdgeThreshold);
         sketchyMat.SetFloat("_NormalModifier", normalEdgesModifier);
         Graphics.Blit(src, edgeMap, edgeDetectionMat);
 
         // apply sketchy effect and render to screen
         sketchyMat.SetTexture("_EdgeMap", edgeMap);
-        sketchyMat.SetVector("_UncertaintyMatrix", shaderProperties.uncertaintyMatrix.ToVector4());
-        sketchyMat.SetInt("_EdgesOn", shaderProperties.edgesOn ? 1 : 0);
-        sketchyMat.SetInt("_UncertaintyOn", shaderProperties.uncertaintyOn ? 1 : 0);
+        sketchyMat.SetVector("_UncertaintyMatrix", uncertaintyMatrix);
+        sketchyMat.SetInt("_EdgesOn", EdgesOn ? 1 : 0);
+        sketchyMat.SetInt("_UncertaintyOn", NoiseOn ? 1 : 0);
+        sketchyMat.SetTexture("_NoiseMap", NoiseMap);
+        sketchyMat.SetFloat("_NoiseScale", NoiseScale);
+        sketchyMat.SetFloat("_NoiseIntensity", NoiseIntensity);
         Graphics.Blit(src, dest, sketchyMat);
 
         // release temp textures
         RenderTexture.ReleaseTemporary(edgeMap);
     }
 
-    public void GeneratePerlinNoise() => GeneratePerlinNoise(Screen.width, Screen.height);
+    public void GeneratePerlinNoise() => GeneratePerlinNoise(256, 256);
 
     private void GeneratePerlinNoise(int width, int height)
     {
         Texture2D tex = new Texture2D(width, height, TextureFormat.RFloat, false);
 
-        float xScale = (1f / width) * shaderProperties.noiseScale.ToVector2().x;
-        float yScale = (1f / width) * shaderProperties.noiseScale.ToVector2().y;
+        float xScale = (1f / width) * noiseScale.x;
+        float yScale = (1f / width) * noiseScale.y;
 
         for (int x = 0; x < width; x++)
         {

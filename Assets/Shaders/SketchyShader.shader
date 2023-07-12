@@ -5,6 +5,8 @@ Shader "Hidden/SketchyShader"
         _MainTex ("Texture", 2D) = "white" {}
         _EdgeMap("Edge Map", 2D) = "white" {}
         _NoiseMap("Noise Map", 2D) = "white" {}
+        _NoiseScale("Noise Scale", Float) = 1
+        _NoiseIntensity("Noise Intensity", Float) = 1
         _UncertaintyMatrix("Uncertainty Matrix - a, b, c, d", Vector) = (1, 1, 1, 1)
         _EdgesOn("Display outlines", Int) = 1
         _UncertaintyOn("Apply sketchy effect", Int) = 1
@@ -44,11 +46,19 @@ Shader "Hidden/SketchyShader"
 
             sampler2D _MainTex;  // flat colors
             sampler2D _EdgeMap;  // precomputed edge map
-            sampler2D _NoiseMap; // Perlin noise generated from code
+            sampler2D _NoiseMap; // noise map - user provided texture
+            sampler2D _NoiseMap_TexelSize; // noise texture size
             float4 _UncertaintyMatrix; // user defined uncertainty
             int _EdgesOn;
             int _UncertaintyOn;
-                          
+            float _NoiseScale;
+            float _NoiseIntensity;
+
+            float2 mod(float2 uv, float2 m)
+            {
+                
+            }
+            
             float sampleEdgeMap(float2 uv) 
             {
                 return tex2D(_EdgeMap, uv).r;
@@ -61,7 +71,7 @@ Shader "Hidden/SketchyShader"
 
             float sampleNoise(float2 uv) 
             {
-                return tex2D(_NoiseMap, uv).r;
+                return tex2D(_NoiseMap, uv*_NoiseScale).r;
             }
 
             fixed4 frag(v2f i) : SV_Target
@@ -73,7 +83,7 @@ Shader "Hidden/SketchyShader"
                     float2(
                         _UncertaintyMatrix.r * offu + _UncertaintyMatrix.g * offv, 
                         _UncertaintyMatrix.b * offu + _UncertaintyMatrix.a * offv
-                        );
+                        ) * _NoiseIntensity;
 
                 float2 finalUV = _UncertaintyOn == 1 ? newUV : i.uv;
 

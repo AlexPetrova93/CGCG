@@ -45,15 +45,12 @@ public class FlyCam : MonoBehaviour
             Cursor.visible = true;
         }
 
-        if (mouseDown)
-        {
-            forward = Input.GetAxis("Forward");
-            right = Input.GetAxis("Right");
-            up = Input.GetAxis("Up");
+        forward = Input.GetAxis("Forward");
+        right = Input.GetAxis("Right");
+        up = Input.GetAxis("Up");
 
-            mouseX = Input.GetAxis("Mouse X");
-            mouseY = Input.GetAxis("Mouse Y");
-        }
+        mouseX = Input.GetAxis("Mouse X");
+        mouseY = Input.GetAxis("Mouse Y");
     }
 
     private void LateUpdate()
@@ -61,13 +58,13 @@ public class FlyCam : MonoBehaviour
         if (!canMove) return;
 
         // camera
+        // position
+        transform.position += transform.forward * forward * Time.deltaTime * movementSpeed;
+        transform.position += transform.right * right * Time.deltaTime * movementSpeed;
+        transform.position += transform.up * up * Time.deltaTime * movementSpeed;
+
         if (mouseDown)
         {
-            // position
-            transform.position += transform.forward * forward * Time.deltaTime * movementSpeed;
-            transform.position += transform.right * right * Time.deltaTime * movementSpeed;
-            transform.position += transform.up * up * Time.deltaTime * movementSpeed;
-
             // rotation
             transform.Rotate(0, mouseX * rotationSpeed, 0, Space.World);
             transform.Rotate(mouseY * rotationSpeed, 0, 0);

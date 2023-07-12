@@ -32,7 +32,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 30465b545110cb04a85fa983a84e8079, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalsTex:
@@ -40,8 +40,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _EdgesOn: 1
+    - _EdgesOn: 0
+    - _NoiseIntensity: 0.32
+    - _NoiseScale: 12.2
     - _UncertaintyOn: 1
     m_Colors:
-    - _UncertaintyMatrix: {r: 4, g: 0, b: 0, a: 4}
+    - _UncertaintyMatrix: {r: 10, g: 1, b: 1, a: 10}
   m_BuildTextureStacks: []

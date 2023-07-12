@@ -1281,7 +1281,7 @@ MonoBehaviour:
     backgroundColor: {r: 1, g: 1, b: 0.77647066, a: 0}
     model: {fileID: 958270639}
     defaultDepthEdgeThreshold: 3
-    defaultNormalEdgeThreshold: 60
+    defaultNormalEdgeThreshold: 40
     defaultNoiseScale: {x: 500, y: 500}
     defaultUncertaintyMatrix: {x: 4, y: 0, z: 0, w: 4}
   - currentScene: 1
@@ -1295,7 +1295,7 @@ MonoBehaviour:
     backgroundColor: {r: 0.70096123, g: 0.75265217, b: 0.8301887, a: 0}
     model: {fileID: 1970329289}
     defaultDepthEdgeThreshold: 5
-    defaultNormalEdgeThreshold: 20
+    defaultNormalEdgeThreshold: 10
     defaultNoiseScale: {x: 450, y: 450}
     defaultUncertaintyMatrix: {x: 4, y: 0, z: 0, w: 4}
   controlPanel: {fileID: 1436454298}
